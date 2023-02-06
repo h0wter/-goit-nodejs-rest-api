@@ -1,59 +1,34 @@
-import { nanoid } from "nanoid";
-import fs from "fs/promises";
-import path from "path";
-import { RequestError } from "../helpers/RequestError.js";
+import { Schema, model } from "mongoose";
+import Joi from "joi";
 
-const contactsPath = path.resolve("./models/contacts.json");
-export async function listContacts() {
-  const contacts = await fs.readFile(contactsPath);
-  return JSON.parse(contacts);
-}
+const contactSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "Set name for contact"],
+  },
+  email: {
+    type: String,
+  },
+  phone: {
+    type: String,
+  },
+  favorite: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-async function updateContacts(contacts) {
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-}
+export const addContactSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string(),
+  phone: Joi.string(),
+  favorite: Joi.boolean(),
+});
 
-export async function getContactById(contactId) {
-  const contacts = await listContacts();
-  const contact = contacts.find(
-    (contact) => contact.id === contactId.toString()
-  );
-  if (!contact) {
-    throw RequestError(404, "Not found");
-  }
-  return contact;
-}
+export const updateStatusContactSchema = Joi.object({
+  favorite: Joi.boolean().required().messages({
+    "any.required": "missing field favorite",
+  }),
+});
 
-export async function removeContact(contactId) {
-  const contacts = await listContacts();
-  const contactIdx = contacts.findIndex((contact) => contact.id === contactId);
-  if (contactIdx === -1) {
-    return null;
-  }
-  contacts.splice(contactIdx, 1);
-  await updateContacts(contacts);
-  return "contact deleted";
-}
-
-export async function addContact({ name, email, phone }) {
-  const contacts = await listContacts();
-  contacts.push({
-    id: nanoid(),
-    name,
-    email,
-    phone,
-  });
-  await updateContacts(contacts);
-  return contacts.slice(-1)[0];
-}
-
-export async function updateContact(contactId, { name, email, phone }) {
-  const contacts = await listContacts();
-  const contactIdx = contacts.findIndex((contact) => contact.id === contactId);
-  if (contactIdx === -1) {
-    return null;
-  }
-  contacts[contactIdx] = { id: contactId, name, email, phone };
-  await updateContacts(contacts);
-  return contacts[contactIdx];
-}
+export const Contact = model("contact", contactSchema);
