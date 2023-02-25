@@ -6,7 +6,7 @@ export const updateStatusContact = async (req, res) => {
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
-  if (result === null) {
+  if (!result) {
     throw RequestError(404, "Not found");
   }
   res.json(result);
