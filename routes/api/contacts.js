@@ -17,21 +17,21 @@ export const contactsRouter = express.Router();
 
 contactsRouter.get("/", ctrlWrapper(getAll));
 
-contactsRouter.get("/:contactId", isValidId, ctrlWrapper(getById));
+contactsRouter.get("/:id", isValidId, ctrlWrapper(getById));
 
 contactsRouter.post("/", validationBody(addContactSchema), ctrlWrapper(add));
 
 contactsRouter.patch(
-  "/:contactId/favorite",
+  "/:id/favorite",
   isValidId,
   validationBody(updateStatusContactSchema),
   ctrlWrapper(updateStatusContact)
 );
 
-contactsRouter.delete("/:contactId", isValidId, ctrlWrapper(deleteById));
+contactsRouter.delete("/:id", isValidId, ctrlWrapper(deleteById));
 
 contactsRouter.put(
-  "/:contactId",
+  "/:id",
   isValidId,
   validationBody(addContactSchema),
   ctrlWrapper(updateById)
