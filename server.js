@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
-import * as dotenv from "dotenv";
 import { app } from "./app.js";
 
-dotenv.config();
 const { PORT = 3000, DB_HOST } = process.env;
-
 mongoose
   .connect(DB_HOST)
   .then(() => {
