@@ -27,8 +27,8 @@ usersRouter.post("/login", validationBody(loginSchema), ctrlWrapper(login));
 usersRouter.post("/logout", authenticate, ctrlWrapper(logout));
 usersRouter.post("/current", authenticate, ctrlWrapper(current));
 usersRouter.patch(
-  "/:id",
-  isValidId,
+  "/",
+  authenticate,
   validationBody(updateSubscriptionSchema),
   ctrlWrapper(updateSubscription)
 );
