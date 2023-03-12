@@ -2,9 +2,8 @@ import { RequestError } from "../../helpers/RequestError.js";
 import { User } from "../../models/users.js";
 
 export const updateSubscription = async (req, res) => {
-  const { id } = req.params;
   const result = await User.findByIdAndUpdate(
-    id,
+    req.user._id,
     {
       subscription: req.body.subscription,
     },
