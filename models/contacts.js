@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import Joi from "joi";
+import { handleSchemaValidationErrors } from "../helpers/handleSchemaValidationErrors.js";
 
 const contactSchema = new Schema({
   name: {
@@ -16,7 +17,13 @@ const contactSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+  },
 });
+
+contactSchema.post("save", handleSchemaValidationErrors);
 
 export const addContactSchema = Joi.object({
   name: Joi.string().required(),
