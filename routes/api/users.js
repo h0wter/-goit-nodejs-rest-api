@@ -5,6 +5,7 @@ import {
   logout,
   current,
   updateSubscription,
+  updateAvatar,
 } from "../../controllers/users/index.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 import { ctrlWrapper } from "../../helpers/ctrlWrapper.js";
@@ -15,6 +16,7 @@ import {
   registerSchema,
   updateSubscriptionSchema,
 } from "../../models/users.js";
+import { upload } from "../../middlewares/upload.js";
 
 export const usersRouter = express.Router();
 
@@ -31,4 +33,10 @@ usersRouter.patch(
   authenticate,
   validationBody(updateSubscriptionSchema),
   ctrlWrapper(updateSubscription)
+);
+usersRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  ctrlWrapper(updateAvatar)
 );
