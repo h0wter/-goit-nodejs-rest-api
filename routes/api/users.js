@@ -9,7 +9,6 @@ import {
 } from "../../controllers/users/index.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 import { ctrlWrapper } from "../../helpers/ctrlWrapper.js";
-import { isValidId } from "../../middlewares/isValidId.js";
 import { validationBody } from "../../middlewares/validationBody.js";
 import {
   loginSchema,
