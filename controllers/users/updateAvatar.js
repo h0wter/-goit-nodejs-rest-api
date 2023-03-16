@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import { User } from "../../models/users.js";
 import { __dirname } from "../../dirname.js";
 
+const PORT = process.env.PORT;
 const avatarsDir = path.join(__dirname, "public", "avatars");
 
 export const updateAvatar = async (req, res) => {
@@ -15,7 +16,9 @@ export const updateAvatar = async (req, res) => {
   await fs.rename(tempFile, resultFile);
   const avatar = await Jimp.read(resultFile);
   await avatar.resize(250, 250).write(resultFile);
-  const avatarURL = path.join("avatars", avatarName);
-  await User.findByIdAndUpdate(id, { avatarURL });
+  const avatarURL = `http://localhost:${PORT}/avatars/${avatarName}`;
+  await User.findByIdAndUpdate(id, {
+    avatarURL,
+  });
   res.json({ avatarURL });
 };
