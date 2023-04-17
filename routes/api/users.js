@@ -6,6 +6,8 @@ import {
   current,
   updateSubscription,
   updateAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } from "../../controllers/users/index.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 import { ctrlWrapper } from "../../helpers/ctrlWrapper.js";
@@ -14,6 +16,7 @@ import {
   loginSchema,
   registerSchema,
   updateSubscriptionSchema,
+  verifyEmailSchema,
 } from "../../models/users.js";
 import { upload } from "../../middlewares/upload.js";
 
@@ -24,6 +27,12 @@ usersRouter.post(
   validationBody(registerSchema),
   ctrlWrapper(register)
 );
+usersRouter.post(
+  "/verify",
+  validationBody(verifyEmailSchema),
+  ctrlWrapper(resendVerifyEmail)
+);
+usersRouter.get("/verify/:verificationToken", ctrlWrapper(verifyEmail));
 usersRouter.post("/login", validationBody(loginSchema), ctrlWrapper(login));
 usersRouter.post("/logout", authenticate, ctrlWrapper(logout));
 usersRouter.post("/current", authenticate, ctrlWrapper(current));
